@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+<h1>Your Cart</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Quantity</th>
+      <th>Item</th>
+      <th>Total</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cart_items.each do |cart_item| %>
+      <tr>
+        <td><%= cart_item.quantity %></td>
+        <td><%= cart_item.book.title %></td>
+        <td><%= cart_item.linetotal %></td>
+        <td><%= link_to 'Edit', edit_cart_item_path(cart_item) %></td>
+        <td><%= link_to 'Remove from Cart', cart_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<h2>Check Out</h2>
+
+<%= form_tag charges_path do %>
+  <article>
+    <label class="amount">
+      <span>Amount: $<%= @total_charges %></span>
+      <% session[:total_charges] = @total_charges * 100 %>
+    </label>
+  </article>
+
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="pk_test_Fz4IQoBNYlipeTIGBxuVfopu"
+    data-name="RailsU Bookstore"
+    data-email="<%= current_student.email %>"
+    data-description="bookstore charges"
+    data-amount=<%= @total_charges * 100 %> >
+  </script>
+<% end %>
+
+<%= link_to 'Shop for more books', new_cart_item_path %>
